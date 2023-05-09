@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Management System</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/css/bootstrap.min.css"
+      integrity="sha512-Ctns0q3ldhBJih2Qx8dMm0rBhTm0RwRwpi8e4E4lglpXtG75RUKRb8dCkJMMnSdp3jtF02Iz2u5KT5j5i5rvBQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Library Management System</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Books</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Members</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1>Welcome to the Library Management System</h1>
+    
+    </div>
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.2/js/bootstrap.bundle.min.js"
+      integrity="sha512-9Zg4vjiojz7vveflW6l8ixVdJjgYw7LJ4W4egQWX9ZieE4ASn/YgzC3MYqEBib7aARyLY6uY7hrUZb6uL7VUZw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+        // Define API endpoints
+const API_ENDPOINTS = {
+  login: '/api/auth/login',
+  signup: '/api/auth/signup',
+  logout: '/api/auth/logout',
+  addMember: '/api/members',
+  updateMember: '/api/members',
+  deleteMember: '/api/members',
+  viewMember: '/api/members',
+  addBook: '/api/books',
+  updateBook: '/api/books',
+  deleteBook: '/api/books',
+  viewBook: '/api/books',
+  borrowBook: '/api/borrowings',
+  returnBook: '/api/borrowings',
+  deleteAccount: '/api/auth/account',
+};
+
+// Get references to HTML elements
+const loginForm = document.querySelector('#login-form');
+const signupForm = document.querySelector('#signup-form');
+const logoutButton = document.querySelector('#logout-button');
+const addMemberForm = document.querySelector('#add-member-form');
+const updateMemberForm = document.querySelector('#update-member-form');
+const deleteMemberForm = document.querySelector('#delete-member-form');
+const viewMemberForm = document.querySelector('#view-member-form');
+const addBookForm = document.querySelector('#add-book-form');
+const updateBookForm = document.querySelector('#update-book-form');
+const deleteBookForm = document.querySelector('#delete-book-form');
+const viewBookForm = document.querySelector('#view-book-form');
+const borrowBookForm = document.querySelector('#borrow-book-form');
+const returnBookForm = document.querySelector('#return-book-form');
+const deleteAccountForm = document.querySelector('#delete-account-form');
+
+// Add event listeners for login form
+loginForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const email = document.querySelector('#email').value;
+  const password = document.querySelector('#password').value;
+  const requestBody = { email, password };
+  fetch(API_ENDPOINTS.login, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestBody),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Login failed');
+    })
+    .then((data) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = '/dashboard.html';
+    })
+    .catch((error) => {
+      console.error(error);
+      alert('Login failed');
+    });
+});
+
+// Add event listeners for signup form
+signupForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = document.querySelector('#name').value;
+  const email = document.querySelector('#email').value;
+  const password = document.querySelector('#password').value;
+  const confirmPassword = document.querySelector('#confirm-password').value;
+  const requestBody = { name, email, password, confirmPassword };
+  fetch(API_ENDPOINTS.signup, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestBody),
+  })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Signup failed');
+    })
+    .then((data) => {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      window.location.href = '/dashboard.html';
+    })
+    .catch((error) => {
+      console.error(error);
+      alert('Signup failed');
+    });
+});
+
+// Add event listeners for logout button
+logoutButton.addEventListener('click', (event) => {
+  event.preventDefault();
+
+  // make an AJAX call to the logout API endpoint
+  fetch('/logout', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include'
+  })
+  .then((response) => {
+    if (response.ok) {
+      // redirect to the login page on successful logout
+      window.location.href = '/login.html';
+    } else {
+      throw new Error('Failed to logout');
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+});
+
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Return Book</title>
+	<!-- Include Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<h2>Return Book</h2>
+		<form id="return-form">
+			<div class="form-group">
+				<label for="memberId">Member ID:</label>
+				<input type="text" class="form-control" id="memberId" name="memberId" required>
+			</div>
+			<div class="form-group">
+				<label for="bookId">Book ID:</label>
+				<input type="text" class="form-control" id="bookId" name="bookId" required>
+			</div>
+			<button type="submit" class="btn btn-primary">Return Book</button>
+		</form>
+	</div>
+
+	<!-- Include jQuery -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+	<script>
+		// Handle the form submission
+        const returnBookForm = document.querySelector('#return-form');
+		
+        returnBookForm.addEventListener('submit', (e) => {
+			e.preventDefault();
+			var memberId = $('#memberId').val();
+			var bookId = $('#bookId').val();
+
+			// Make an AJAX call to the REST API endpoint to return the book
+			fetch('/books/return', {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					memberId: memberId,
+					bookId: bookId
+				})
+			})
+			.then(function(response) {
+				if (!response.ok) {
+					throw new Error(response.statusText);
+				}
+				return response.json();
+			})
+			.then(function(data) {
+				// Show a success message to the user
+				alert(data.message);
+			})
+			.catch(function(error) {
+				// Show an error message to the user
+				alert('Error: ' + error.message);
+			});
+		});
+	</script>
+</body>
+</html>

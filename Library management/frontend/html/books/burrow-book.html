@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Burrow Book</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container mt-4">
+		<h1>Burrow Book</h1>
+		<hr>
+		<div class="alert alert-danger d-none" id="alert-message"></div>
+		<form id="burrow-form">
+			<div class="form-group">
+				<label for="book-id">Book ID:</label>
+				<input type="text" class="form-control" id="book-id" name="bookId" placeholder="Enter book ID" required>
+			</div>
+			<div class="form-group">
+				<label for="member-id">Member ID:</label>
+				<input type="text" class="form-control" id="member-id" name="memberId" placeholder="Enter member ID" required>
+			</div>
+			<button type="submit" class="btn btn-primary">Burrow</button>
+		</form>
+	</div>
+
+	<script >
+        const borrowForm = document.getElementById('borrow-form');
+borrowForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const memberId = document.getElementById('member-id').value;
+  const bookId = document.getElementById('book-id').value;
+
+  fetch('/borrow', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+    },
+    body: JSON.stringify({
+      memberId: memberId,
+      bookId: bookId
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    alert('Book borrowed successfully!');
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error borrowing book!');
+  });
+});
+
+    </script>
+</body>
+</html>

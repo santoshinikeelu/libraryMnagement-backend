@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Update Member</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="my-4">Update Member</h1>
+      <form id="update-member-form">
+        <div class="form-group">
+          <label for="member-name">Name:</label>
+          <input type="text" class="form-control" id="member-name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="member-email">Email:</label>
+          <input type="email" class="form-control" id="member-email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="member-phone">Phone:</label>
+          <input type="tel" class="form-control" id="member-phone" name="phone" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        // Get the member ID from the URL query parameter
+        const memberId = new URLSearchParams(window.location.search).get('id');
+        // Populate the form with the existing member data
+        $.get(`/members/${memberId}`, function(data) {
+          $('#member-name').val(data.name);
+          $('#member-email').val(data.email);
+          $('#member-phone').val(data.phone);
+        });
+        // Handle the form submission
+        $('#update-member-form').submit(function(event) {
+          event.preventDefault();
+          const name = $('#member-name').val();
+          const email = $('#member-email').val();
+          const phone = $('#member-phone').val();
+          $.ajax({
+            type: 'PUT',
+            url: `/members/${memberId}`,
+            data: { name, email, phone },
+            success: function() {
+              alert('Member updated successfully');
+              window.location.href = '/view-members.html';
+            },
+            error: function() {
+              alert('Failed to update member');
+            }
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

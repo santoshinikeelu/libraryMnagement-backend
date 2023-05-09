@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System | Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-DmZuPhJiTHPVvCf+Ly8PAW99M6FEiLm2XmivJaV+txUksx5g6I5Q7B6kFnhExp33" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="text-center my-5">Library Management System</h1>
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4">Login</h3>
+              <form id="login-form" method="POST">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-4">Login</button>
+              </form>
+              <div class="text-center mt-4">
+                <a href="signup.html">Don't have an account? Sign up here.</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+      integrity="sha384-p3xx2MllWJYywMqnp+GgKmR8kZCprbUsJ1kiX9dJ85RpuTJKg89TnFw+se94muZz"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+JwGzPgAjZo6lNU6DI9QfqnJXQ8qodq"
+      crossorigin="anonymous"></script>
+      <script>
+        // Function to make a POST request to the login endpoint
+function loginUser(username, password) {
+  fetch('/api/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Handle the response data
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error(error);
+  });
+}
+
+      </script>
+  </body>
+</html>

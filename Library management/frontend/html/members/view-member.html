@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>View Members - Library Management System</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>View Members</h2>
+    <hr>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="members-table">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  
+  <script >
+    const membersTable = document.getElementById('members-table');
+
+fetch('/api/members', {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+.then(response => response.json())
+.then(members => {
+  // Loop through each member and add a row to the table
+  members.forEach(member => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${member._id}</td>
+      <td>${member.name}</td>
+      <td>${member.email}</td>
+      <td>${member.phone}</td>
+      <td>${member.address}</td>
+      <td>
+        <a href="update-member.html?id=${member._id}" class="btn btn-sm btn-primary">Edit</a>
+        <a href="delete-member.html?id=${member._id}" class="btn btn-sm btn-danger">Delete</a>
+      </td>
+    `;
+    membersTable.appendChild(row);
+  });
+})
+.catch(error => console.error(error));
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>View Available Books</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Available Books</h2>
+      <table class="table mt-3">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody id="books-table">
+        </tbody>
+      </table>
+    </div>
+    <script >
+    // Get the container element for displaying books
+        const bookContainer = document.querySelector('#book-container');
+        
+        
+        fetch('/books')
+          .then(response => response.json())
+          .then(data => {
+            // Loop through the data array and display each book
+            data.forEach(book => {
+              // Create a new book element
+              const bookElement = document.createElement('div');
+              bookElement.classList.add('book');
+        
+              // Add the book title, author, and description to the book element
+              const titleElement = document.createElement('h2');
+              titleElement.textContent = book.title;
+              bookElement.appendChild(titleElement);
+        
+              const authorElement = document.createElement('p');
+              authorElement.textContent = `Author: ${book.author}`;
+              bookElement.appendChild(authorElement);
+        
+              const descElement = document.createElement('p');
+              descElement.textContent = `Description: ${book.description}`;
+              bookElement.appendChild(descElement);
+        
+              // Add the book element to the container
+              bookContainer.appendChild(bookElement);
+            });
+          })
+          .catch(error => {
+            console.error(error);
+          });
+        </script>
+  </body>
+</html>

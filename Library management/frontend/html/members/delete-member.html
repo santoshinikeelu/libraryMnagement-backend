@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Delete Member</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="mb-4">Delete Member</h1>
+      <form id="delete-member-form">
+        <div class="form-group">
+          <label for="member-id">Member ID</label>
+          <input
+            type="text"
+            class="form-control"
+            id="member-id"
+            name="memberId"
+            required
+          />
+        </div>
+        <button type="submit" class="btn btn-danger">Delete Member</button>
+      </form>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.js"
+      integrity="sha384-+bzsWvyXgLsvLgJ1OZ7AZ00MvDrI39+90czpGNT5K5P5z2UBIkX5QQji+JeyGx7V"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const API_BASE_URL = 'http://localhost:3000/api';
+
+function getToken() {
+  return localStorage.getItem('token');
+}
+
+function setToken(token) {
+  localStorage.setItem('token', token);
+}
+
+function removeToken() {
+  localStorage.removeItem('token');
+}
+
+async function request(endpoint, method, body) {
+  const token = getToken();
+  const url = API_BASE_URL + endpoint;
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  const response = await fetch(url, {
+    method,
+    headers,
+    body: JSON.stringify(body),
+  });
+  if (response.status === 401) {
+    removeToken();
+    window.location.href = '/login.html';
+    return;
+  }
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message);
+  }
+  const data = await response.json();
+  return data;
+}
+
+export async function signup(userData) {
+  const data = await request('/signup', 'POST', userData);
+  setToken(data.token);
+  return data;
+}
+
+export async function login(userData) {
+  const data = await request('/login', 'POST', userData);
+  setToken(data.token);
+  return data;
+}
+
+export async function logout() {
+  removeToken();
+  await request('/logout', 'POST');
+}
+
+export async function getMember(id) {
+  const data = await request(`/members/${id}`, 'GET');
+  return data.member;
+}
+
+export async function addMember(memberData) {
+  const data = await request('/members', 'POST', memberData);
+  return data.member;
+}
+
+export async function updateMember(id, memberData) {
+  const data = await request(`/members/${id}`, 'PUT', memberData);
+  return data.member;
+}
+
+export async function deleteMember(id) {
+  await request(`/members/${id}`, 'DELETE');
+}
+
+export async function getBooks() {
+  const data = await request('/books', 'GET');
+  return data.books;
+}
+
+export async function addBook(bookData) {
+  const data = await request('/books', 'POST', bookData);
+  return data.book;
+}
+
+export async function getBook(id) {
+  const data = await request(`/books/${id}`, 'GET');
+  return data.book;
+}
+
+export async function updateBook(id, bookData) {
+  const data = await request(`/books/${id}`, 'PUT', bookData);
+  return data.book;
+}
+
+export async function deleteBook(id) {
+  await request(`/books/${id}`, 'DELETE');
+}
+
+export async function borrowBook(bookId, memberId) {
+  await request('/borrow', 'POST', { bookId, memberId });
+}
+
+export async function returnBook(bookId, memberId) {
+  await request('/return', 'POST', { bookId, memberId });
+}
+
+    </script>
+    <script >
+      const memberIdInput = document.getElementById('memberId');
+const deleteButton = document.getElementById('deleteButton');
+
+deleteButton.addEventListener('click', () => {
+  const memberId = memberIdInput.value;
+  
+  // Send DELETE request to the REST API endpoint
+  fetch(`/members/${memberId}`, {
+    method: 'DELETE'
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to delete member');
+    }
+    alert('Member deleted successfully');
+    location.reload(); // Reload the page to update the member list
+  })
+  .catch(error => {
+    console.error(error);
+    alert('Failed to delete member');
+  });
+});
+
+    </script>
+  </body>
+</html>

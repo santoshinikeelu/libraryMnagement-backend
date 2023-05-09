@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Update Book</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Update Book</h2>
+      <form id="update-book-form">
+        <div class="form-group">
+          <label for="book-title">Title:</label>
+          <input type="text" class="form-control" id="book-title" name="title">
+        </div>
+        <button type="submit" class="btn btn-primary">Update Book</button>
+      </form>
+    </div>
+
+    <script>
+      const form = document.querySelector('#update-book-form');
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const bookId = new URLSearchParams(window.location.search).get('id');
+        const title = form.elements.title.value;
+        const author = form.elements.author.value;
+        const isbn = form.elements.isbn.value;
+        const quantity = form.elements.quantity.value;
+
+        try {
+          const response = await fetch(`/books/${bookId}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title })
+          });
+
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message);
+          }
+
+          window.location.href = '/view-books.html';
+        } catch (error) {
+          console.error(error);
+          alert('Error updating book. Please try again.');
+        }
+      });
+    </script>
+  </body>
+</html>

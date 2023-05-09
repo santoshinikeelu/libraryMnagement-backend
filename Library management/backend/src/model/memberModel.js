@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const libraryModel = require("../model/libraryModel");
 
 const memberSchema = new mongoose.Schema(
   {
@@ -33,7 +34,7 @@ const memberSchema = new mongoose.Schema(
       city: { type: String },
       pincode: { type: String },
     },
-    book: [bookSchema],
+    
     isDeleted: {
       type: Boolean,
       default: false,
